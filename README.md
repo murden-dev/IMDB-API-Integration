@@ -2,6 +2,8 @@
 
 > Teste para recrutamento como front-end na Abler.
 
+[Demo](https://sharp-meitner-f61aea.netlify.com/)
+
 ## Build Setup
 
 ``` bash
@@ -18,5 +20,3 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
