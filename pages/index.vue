@@ -245,11 +245,13 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 :root {
   --primary: #01d276;
+  --bg-dark: #081d25;
 }
 html,
 body {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 .results-enter,
@@ -321,7 +323,7 @@ body {
     }
   }
   &.dark {
-    background-color: #081d25;
+    background-color: var(--bg-dark);
     border-bottom: none;
     h3 {
       cursor: pointer;

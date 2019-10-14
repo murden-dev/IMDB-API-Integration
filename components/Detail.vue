@@ -138,7 +138,6 @@ export default {
   transition: transform 600ms ease-out, opacity 800ms linear;
   will-change: filter;
   &.visible {
-    transition-delay: 600ms;
     filter: brightness(0.2);
     opacity: 1;
     transform: translateY(-4rem);
@@ -174,7 +173,7 @@ export default {
     top: 0;
     left: 40%;
     width: 60vw;
-    padding: 6rem 5.6rem 0 0;
+    padding: 5.6rem 5.6rem 0 0;
     height: 100%;
     display: flex;
     align-items: flex-start;
@@ -185,7 +184,7 @@ export default {
       transition: all 200ms ease;
       font-size: 3.2rem;
       font-weight: bolder;
-      margin-bottom: 1rem;
+      margin-bottom: 0.6rem;
       transform: translateY(0.4rem);
       opacity: 0;
       &.movie__rating {
@@ -203,7 +202,7 @@ export default {
       }
     }
     h3 {
-      transition: all 200ms ease;
+      transition: all 600ms ease;
       font-size: 1.2rem;
       font-weight: bolder;
       margin-bottom: 0.6rem;
@@ -211,22 +210,23 @@ export default {
       opacity: 0;
     }
     p {
-      transition: all 200ms ease;
+      transition: all 600ms ease;
       font-size: 1rem;
       line-height: 1.4;
       transform: translateY(0.4rem);
       opacity: 0;
     }
     time {
-      transition: all 200ms ease;
+      transition: all 600ms ease;
       font-size: 1rem;
       opacity: 0.8;
       margin-bottom: 2rem;
       transform: translateY(0.4rem);
       opacity: 0;
+      font-style: italic;
     }
     quote {
-      transition: all 200ms ease;
+      transition: all 600ms ease;
       font-size: 2rem;
       font-weight: bolder;
       margin-bottom: 0.6rem;
@@ -236,27 +236,27 @@ export default {
     }
     &.visible {
       h1 {
-        transition-delay: 600ms;
+        transition-delay: 1600ms;
         opacity: 1;
         transform: translateY(0);
       }
       h3 {
-        transition-delay: 800ms;
+        transition-delay: 1800ms;
         opacity: 1;
         transform: translateY(0);
       }
       p {
-        transition-delay: 800ms;
+        transition-delay: 1800ms;
         opacity: 1;
         transform: translateY(0);
       }
       time {
-        transition-delay: 700ms;
+        transition-delay: 1700ms;
         opacity: 1;
         transform: translateY(0);
       }
       quote {
-        transition-delay: 1000ms;
+        transition-delay: 2000ms;
         opacity: 1;
         transform: translateY(0);
       }
