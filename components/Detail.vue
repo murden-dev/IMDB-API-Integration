@@ -26,6 +26,7 @@
           {{ movieRating }}%
         </h1>
         <h1>{{ movieTitle }}</h1>
+        <time class="movie__runtime"> {{ movieRuntime }}min </time>
         <time class="movie__release-date">
           {{ formatMovieReleaseDate(movieReleaseDate) }}
         </time>
@@ -71,6 +72,9 @@ export default {
     movieTagline() {
       return this.isDetail && this.movie ? this.movie.tagline : ''
     },
+    movieRuntime() {
+      return this.isDetail && this.movie ? this.movie.runtime : ''
+    },
     posterURL() {
       return this.isDetail && this.movie
         ? this.imageURL + this.movie.poster_path
@@ -79,31 +83,33 @@ export default {
   },
   methods: {
     formatMovieReleaseDate(unformatted) {
-      const months = [
-        'Janeiro',
-        'Fevereiro',
-        'Março',
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-        'Setembro',
-        'Outubro',
-        'Novembro',
-        'Dezembro'
-      ]
-      const timestamp = new Date(unformatted)
-      const releaseDate = `
-        ${
-          timestamp.getDate() < 9
-            ? '0' + (timestamp.getDate() + 1)
-            : timestamp.getDate() + 1
-        }
-          de
-          ${months[timestamp.getMonth()]}
-          de ${timestamp.getFullYear()}`
-      return releaseDate
+      if (this.isDetail && this.movie) {
+        const months = [
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro'
+        ]
+        const timestamp = new Date(unformatted)
+        const releaseDate = `
+          ${
+            timestamp.getDate() < 9
+              ? '0' + (timestamp.getDate() + 1)
+              : timestamp.getDate() + 1
+          }
+            de
+            ${months[timestamp.getMonth()]}
+            de ${timestamp.getFullYear()}`
+        return releaseDate
+      }
     }
   }
 }
@@ -223,7 +229,11 @@ export default {
       margin-bottom: 2rem;
       transform: translateY(0.4rem);
       opacity: 0;
-      font-style: italic;
+      &.movie__runtime {
+        margin-bottom: 0.4rem;
+        font-weight: lighter;
+        font-style: italic;
+      }
     }
     quote {
       transition: all 600ms ease;
