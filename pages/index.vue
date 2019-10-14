@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="header">
-      <h3>TheMovie<span>Db</span></h3>
+    <div class="header" :class="isDetail ? 'dark' : 'light'">
+      <h3 @click="isDetail = false">TheMovie<span>Db</span></h3>
       <el-button
         v-if="!session_id"
         type="text"
@@ -34,9 +34,10 @@
         :key="movie.id"
         class="card"
         shadow="always"
+        @click="showDetails(movie.id)"
       >
         <el-row>
-          <el-col :span="12" class="card__height-modifier">
+          <el-col :span="10" class="card__height-modifier">
             <el-image
               class="card__thumbnail"
               :src="imageURL + movie.poster_path"
@@ -47,7 +48,7 @@
               <img slot="error" src="@/assets/error.png" />
             </el-image>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="14">
             <div class="movie__info">
               <h2 class="movie__title">{{ movie.title }}</h2>
               <time class="movie__release-date">
@@ -76,17 +77,21 @@
         </el-row>
       </el-card>
     </div>
-    <Details :isDetail="isDetail" :movie="movieDetails.data" />
+    <Detail
+      :imageURL="imageURL"
+      :isDetail="isDetail"
+      :movie="movieDetails.data"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import _ from 'lodash'
-import Details from '@/components/Details.vue'
+import Detail from '@/components/Detail.vue'
 
 export default {
-  components: { Details },
+  components: { Detail },
   data: () => ({
     apiKey: '?api_key=a323978454b63679a0646cf2fe7ca498',
     locale: '&language=pt-BR',
@@ -169,11 +174,14 @@ export default {
         })
     },
     async showDetails(id) {
-      this.isDetail = true
       this.selectedMovie = id
-      this.movieDetails = await axios.get(
-        `${this.detailURL}/${this.selectedMovie}${this.apiKey}&append_to_response=videos,images`
-      )
+      this.movieDetails = await axios
+        .get(
+          `${this.detailURL}/${this.selectedMovie}${this.apiKey}${this.locale}&append_to_response=videos,images`
+        )
+        .finally(() => {
+          this.isDetail = true
+        })
     },
     async getPopularMovies() {
       this.$refs.carrousel.scrollTo(0, 0)
@@ -279,6 +287,7 @@ body {
 
 .container {
   position: relative;
+  overflow: hidden;
   padding: 6rem 3rem;
   margin: 0;
   height: 100vh;
@@ -295,15 +304,32 @@ body {
   height: 4rem;
   padding: 1rem 3rem;
   color: var(--primary);
-  background-color: white;
   box-shadow: 0px 4px 32px -12px #00000020;
-  border-bottom: 1px solid #e4e4e4;
-  h3 {
-    cursor: pointer;
-    &:hover {
-      color: initial;
-      span {
-        color: var(--primary);
+  transition: all 240ms linear;
+  transition-delay: 320ms;
+  &.light {
+    background-color: white;
+    border-bottom: 1px solid #d7d7d7;
+    h3 {
+      cursor: pointer;
+      &:hover {
+        color: initial;
+        span {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+  &.dark {
+    background-color: #081d25;
+    border-bottom: none;
+    h3 {
+      cursor: pointer;
+      &:hover {
+        color: #d7d7d7;
+        span {
+          color: var(--primary);
+        }
       }
     }
   }
@@ -311,6 +337,15 @@ body {
     /*SAFARI FIX*/
     margin-left: 100%;
     margin-left: auto;
+    font-weight: lighter;
+    color: var(--primary);
+    font-size: 1rem;
+    &:focus,
+    :active {
+      text-decoration: none;
+      font-weight: bolder;
+      color: var(--primary);
+    }
   }
 }
 
@@ -368,9 +403,9 @@ body {
     overflow: hidden;
   }
   .card__thumbnail {
-    height: 100%;
+    height: auto;
     height: -webkit-fill-available;
-    width: 100%;
+    width: 105%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -399,7 +434,7 @@ body {
       font-size: 2.4rem;
       position: absolute;
       bottom: 2rem;
-      left: calc(50% + 2rem);
+      left: calc(42% + 2rem);
       &.good {
         color: var(--primary);
       }
