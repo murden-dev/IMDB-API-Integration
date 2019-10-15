@@ -178,7 +178,7 @@ export default {
             .then((response) => {
               const token = response.data.request_token
               location.replace(
-                `https://www.themoviedb.org/authenticate/${token}?redirect_to=http://localhost:3000`
+                `https://www.themoviedb.org/authenticate/${token}?redirect_to=https://sharp-meitner-f61aea.netlify.com/`
               )
             })
         })
