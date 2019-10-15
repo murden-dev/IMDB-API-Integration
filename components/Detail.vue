@@ -170,7 +170,7 @@ export default {
           {
             media_type: 'movie',
             media_id: id,
-            favorite: true
+            watchlist: true
           }
         )
         .then((response) => {
