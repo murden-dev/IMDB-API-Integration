@@ -78,9 +78,13 @@
       </el-card>
     </div>
     <Detail
+      @close="closeDetail"
       :imageURL="imageURL"
       :isDetail="isDetail"
       :movie="movieDetails.data"
+      :apiKey="apiKey"
+      :session_id="session_id"
+      :account_id="account_id"
     />
   </div>
 </template>
@@ -102,7 +106,8 @@ export default {
     searchQuery: '',
     response: {},
     session_id: '',
-    selectedMovie: '',
+    account_id: '',
+    selectedMovie: Number,
     isDetail: false,
     movieDetails: {}
   }),
@@ -138,9 +143,23 @@ export default {
             this.session_id = response.data.session_id
           }
         })
+        .then(() => {
+          axios
+            .get(
+              `https://api.themoviedb.org/3/account${this.apiKey}&session_id=${this.session_id}`
+            )
+            .then((response) => {
+              if (response.data.id) {
+                this.account_id = response.data.id.toString()
+              }
+            })
+        })
     }
   },
   methods: {
+    closeDetail() {
+      this.isDetail = false
+    },
     showLoginModal() {
       this.$confirm(
         'Entre com sua conta TMDb ou, caso prefira, teste grátis. 😊 Fácil assim!',
@@ -336,18 +355,10 @@ body {
     }
   }
   .login-button {
+    font-size: 1rem;
     /*SAFARI FIX*/
     margin-left: 100%;
     margin-left: auto;
-    font-weight: lighter;
-    color: var(--primary);
-    font-size: 1rem;
-    &:focus,
-    :active {
-      text-decoration: none;
-      font-weight: bolder;
-      color: var(--primary);
-    }
   }
 }
 

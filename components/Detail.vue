@@ -26,30 +26,65 @@
           {{ movieRating }}%
         </h1>
         <h1>{{ movieTitle }}</h1>
-        <time class="movie__runtime"> {{ movieRuntime }}min </time>
-        <time class="movie__release-date">
-          {{ formatMovieReleaseDate(movieReleaseDate) }}
-        </time>
+        <div class="movie__release-info">
+          <div class="movie__release-info__inner">
+            <time class="movie__runtime"> {{ movieRuntime }}min </time>
+            <time class="movie__release-date">
+              {{ formatMovieReleaseDate(movieReleaseDate) }}
+            </time>
+          </div>
+          <div class="actionButtons" :class="isDetail ? 'visible' : 'hidden'">
+            <el-button
+              icon="el-icon-star-off"
+              v-if="movie && account_id"
+              circle
+              @click="markAsFavorite(movie.id)"
+            />
+            <el-button
+              icon="el-icon-plus"
+              v-if="movie && account_id"
+              round
+              @click="addToWatchlist(movie.id)"
+            >
+              Minha Lista
+            </el-button>
+            <el-button
+              icon="el-icon-video-play"
+              v-if="movie && account_id"
+              type="text"
+              @click="watchTrailer()"
+            >
+              Assistir Trailer
+            </el-button>
+          </div>
+        </div>
         <h3>Sinopse</h3>
         <p class="movie__overview">{{ movieOverview }}</p>
         <el-divider />
-        <quote>{{ movieTagline }}</quote>
-        <div>
-          <h5></h5>
-          <p></p>
-        </div>
+        <q>{{ movieTagline }}</q>
       </div>
     </div>
+    <el-button
+      type="text"
+      class="closeButton"
+      icon="el-icon-close"
+      @click="closeDetail"
+    />
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Detail',
   props: {
     isDetail: Boolean,
     imageURL: String,
-    movie: Object
+    movie: Object,
+    apiKey: String,
+    session_id: String,
+    account_id: String
   },
   computed: {
     backdropURL() {
@@ -110,6 +145,47 @@ export default {
             de ${timestamp.getFullYear()}`
         return releaseDate
       }
+    },
+    markAsFavorite(id) {
+      axios
+        .post(
+          `https://api.themoviedb.org/3/account/${this.account_id}/favorite${this.apiKey}&session_id=${this.session_id}`,
+          {
+            media_type: 'movie',
+            media_id: id,
+            favorite: true
+          }
+        )
+        .then((response) => {
+          this.$message({
+            type: 'success',
+            message: 'Adicionado aos favoritos!'
+          })
+        })
+    },
+    addToWatchlist(id) {
+      axios
+        .post(
+          `https://api.themoviedb.org/3/account/${this.account_id}/watchlist${this.apiKey}&session_id=${this.session_id}`,
+          {
+            media_type: 'movie',
+            media_id: id,
+            favorite: true
+          }
+        )
+        .then((response) => {
+          this.$message({
+            type: 'success',
+            message: 'Adicionado à sua lista!'
+          })
+        })
+    },
+    watchTrailer() {
+      const video = this.movie ? this.movie.videos.results[0].key : ''
+      window.open(`https://www.youtube.com/watch?v=${video}`)
+    },
+    closeDetail() {
+      this.$emit('close')
     }
   }
 }
@@ -128,7 +204,7 @@ export default {
   overflow-y: hidden;
   overflow-x: hidden;
   transform: translateY(100%);
-  transition: transform 700ms ease-out, opacity 200ms linear;
+  transition: transform 500ms ease-out, opacity 200ms linear;
   &.visible {
     transform: translateY(0);
     z-index: 998;
@@ -163,7 +239,7 @@ export default {
   transition: transform 600ms ease-out, opacity 800ms linear;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0);
   &.visible {
-    transition-delay: 900ms;
+    transition-delay: 700ms;
     opacity: 1;
     transform: translateY(2rem);
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.8);
@@ -218,7 +294,7 @@ export default {
     p {
       transition: all 600ms ease;
       font-size: 1rem;
-      line-height: 1.4;
+      line-height: 1.5;
       transform: translateY(0.4rem);
       opacity: 0;
     }
@@ -235,7 +311,7 @@ export default {
         font-style: italic;
       }
     }
-    quote {
+    q {
       transition: all 600ms ease;
       font-size: 2rem;
       font-weight: bolder;
@@ -246,31 +322,64 @@ export default {
     }
     &.visible {
       h1 {
-        transition-delay: 1600ms;
+        transition-delay: 1400ms;
         opacity: 1;
         transform: translateY(0);
       }
       h3 {
-        transition-delay: 1800ms;
+        transition-delay: 1600ms;
         opacity: 1;
         transform: translateY(0);
       }
       p {
-        transition-delay: 1800ms;
+        transition-delay: 1600ms;
         opacity: 1;
         transform: translateY(0);
       }
       time {
-        transition-delay: 1700ms;
+        transition-delay: 1400ms;
         opacity: 1;
         transform: translateY(0);
       }
-      quote {
+      q {
         transition-delay: 2000ms;
         opacity: 1;
         transform: translateY(0);
       }
     }
+    .movie__release-info {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      .movie__release-info__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .actionButtons {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-around;
+        justify-content: space-evenly;
+        opacity: 0;
+        transform: translateY(0.8rem);
+        transition: all 600ms ease-out;
+        &.visible {
+          transition-delay: 1450ms;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
   }
+}
+.closeButton {
+  position: absolute;
+  right: 2rem;
+  top: 4.8rem;
+  font-size: 2rem;
 }
 </style>
