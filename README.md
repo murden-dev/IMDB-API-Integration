@@ -1,9 +1,3 @@
-# front-end-abler
-
-> Teste para recrutamento como front-end na Abler.
-
-[Demo](https://sharp-meitner-f61aea.netlify.com/)
-
 ## Build Setup
 
 ``` bash
